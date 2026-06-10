@@ -1,0 +1,59 @@
+version: "3.9"
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║          BigBasket Cart Prediction — Docker Compose Stack        ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+services:
+
+  # ── Streamlit Dashboard ───────────────────────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bb_dashboard
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - PYTHONPATH=/app
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - bb_network
+
+  # ── Flask REST API ────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bb_api
+    command: gunicorn "src.api.app:create_app()" --bind 0.0.0.0:5000 --workers 4 --timeout 120
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - PYTHONPATH=/app
+      - FLASK_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - bb_network
+
+networks:
+  bb_network:
+    driver: bridge
+
+volumes:
+  bb_data:
+  bb_models:

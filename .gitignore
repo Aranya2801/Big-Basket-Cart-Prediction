@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Data (large files — add via Git LFS or DVC)
+data/raw/*.csv
+data/processed/*.csv
+data/processed/*.parquet
+!data/synthetic/generate_dataset.py
+
+# Models
+models/artifacts/*.pkl
+models/artifacts/*.joblib
+*.pkl
+*.joblib
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+coverage.xml
+
+# Env
+.env
+.env.local
+*.env
+
+# Docker
+.dockerignore
+
+# Streamlit
+.streamlit/secrets.toml
